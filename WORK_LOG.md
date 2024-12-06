@@ -1,9 +1,10 @@
-Name: YOUR NAME HERE
+Name: Kieran
 
-| Date    |  Time  |                                     Update |
-|:--------|:------:|-------------------------------------------:|
-| April 5 | 9-10pm | I tried to write abstract, efficient code. |
-|         |        |                                            |
+| Date  |       Time        |                                                                                                                                                                                                                                                                                                                                                                                                                                           Update |
+|:------|:-----------------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| Dec 2 |  1:45pm - 2:15pm  |                                                                                                                                                                                                                                     During this class period we discussed some initial approaches to this problem. One approach was using a frequency list to keep track of the most common words and then replace them with a short 5 bit code. |
+| Dec 4 | 12:35pm - 1:15pm  |                                                                                                                                                                                                                                                                                          I talked more about this solution with Landon Tony and Isha and we discussed using a hashmap to store and concisely give the most common text findings. |
+| Dec 5 | 10:45pm - 11:05pm |  I thought a bit further about the solution about and my idea which I will execute starting tomorrow is this: I will split the string by a space delimiter then create a frequency list of which words we see most often. Then I'd potentially store the top 20% of candidates and compress those. Additionally, i'd compress every other char to a 5-bit code as we only have upper case letters and lowercase letters and select punctuations. |
 
 
 To add a new row to the table, click into a cell and then hit shift-enter.

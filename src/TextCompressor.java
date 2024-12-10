@@ -30,7 +30,19 @@
 public class TextCompressor {
 
     private static void compress() {
+        String text = BinaryStdIn.readString();
+        TST codes = new TST();
+        int startCode = 257;
+        String prefix;
+        String next;
+        String longestPrefix;
+        for (int i = 0; i < text.length(); i++) {
+            prefix = "" + text.charAt(i);
+            longestPrefix = codes.getLongestPrefix("" + prefix);
+            if (longestPrefix.equals("")) {
 
+            }
+        }
         BinaryStdOut.close();
     }
 

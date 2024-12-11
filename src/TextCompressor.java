@@ -28,21 +28,27 @@
  *  @author Zach Blick, Kieran Pichai
  */
 public class TextCompressor {
+    final private static int CODE_LENGTH = 12;
 
     private static void compress() {
         String text = BinaryStdIn.readString();
         TST codes = new TST();
+        for (int i = 0; i < 255; i++) {
+            codes.insert("" + (char)i, i);
+        }
         int startCode = 257;
         String prefix;
-        String next;
         String longestPrefix;
         for (int i = 0; i < text.length(); i++) {
             prefix = "" + text.charAt(i);
-            longestPrefix = codes.getLongestPrefix("" + prefix);
-            if (longestPrefix.equals("")) {
-
+            longestPrefix = codes.getLongestPrefix(text, i);
+            if (i + longestPrefix.length() < text.length()) {
+                codes.insert(prefix + text.charAt(i + longestPrefix.length()), startCode++);
+                i += longestPrefix.length();
             }
+            BinaryStdOut.write(codes.lookup(prefix), CODE_LENGTH);
         }
+        BinaryStdOut.write(256, CODE_LENGTH);
         BinaryStdOut.close();
     }
 

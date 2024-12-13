@@ -57,31 +57,33 @@ public class TextCompressor {
     }
 
     private static void expand() {
-        String[] codes = new String[(int)Math.pow(2, CODE_LENGTH)];
-        int codesLen = (int)Math.pow(2, CODE_LENGTH);
+        String[] codes = new String[(int) Math.pow(2, CODE_LENGTH)];
+        int codesLen = (int) Math.pow(2, CODE_LENGTH);
         for (int i = 0; i <= 256; i++) {
-            codes[i] = "" + (char)i;
+            codes[i] = "" + (char) i;
             if (i == 256) {
                 codes[i] = "";
             }
         }
         int maxCode = 257;
-        int valCode = BinaryStdIn.readInt(12);
+        int valCode = BinaryStdIn.readInt(CODE_LENGTH);
         String val = codes[valCode];
-
         BinaryStdOut.write(val);
         int nextCode;
-        while (!val.equals("")) {
+        while (true) {
             nextCode = BinaryStdIn.readInt(CODE_LENGTH);
-            if (nextCode < maxCode) {
-                BinaryStdOut.write(codes[nextCode]);
+            if (nextCode == 256) break;
+            String entry;
+            if (nextCode < maxCode && codes[nextCode] != null) {
+                entry = codes[nextCode];
             } else {
-                BinaryStdOut.write(val + val.charAt(0));
+                entry = val + val.charAt(0);
             }
-            if (maxCode < codes.length && nextCode != 256 && maxCode < codesLen) {
-                codes[maxCode++] = val + codes[nextCode].charAt(0);
+            BinaryStdOut.write(entry);
+            if (maxCode < codesLen) {
+                codes[maxCode++] = val + entry.charAt(0);
             }
-            val = codes[nextCode];
+            val = entry;
         }
         BinaryStdOut.close();
     }

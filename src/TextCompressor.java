@@ -21,6 +21,8 @@
  *  = 43.54% compression ratio!
  ******************************************************************************/
 
+import java.util.ArrayList;
+
 /**
  *  The {@code TextCompressor} class provides static methods for compressing
  *  and expanding natural language through textfile input.
@@ -53,9 +55,28 @@ public class TextCompressor {
     }
 
     private static void expand() {
-
-        // TODO: Complete the expand() method
-
+        ArrayList<String> codes = new ArrayList<>();
+        for (int i = 0; i < 256; i++) {
+            codes.add("" + (char) i);
+        }
+        String val = codes.get(BinaryStdIn.readInt(CODE_LENGTH));
+        BinaryStdOut.write(val);
+        int nextCode;
+        while (!BinaryStdIn.isEmpty()) {
+            nextCode = BinaryStdIn.readInt(CODE_LENGTH);
+            if (nextCode == 256){
+                break;
+            }
+            String nextVal;
+            if (nextCode < codes.size()) {
+                nextVal = codes.get(nextCode);
+            } else {
+                nextVal = val + val.charAt(0);
+            }
+            codes.add(val + nextVal.charAt(0));
+            BinaryStdOut.write(nextVal);
+            val = nextVal;
+        }
         BinaryStdOut.close();
     }
 

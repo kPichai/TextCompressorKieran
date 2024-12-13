@@ -33,6 +33,7 @@ public class TextCompressor {
     private static void compress() {
         String text = BinaryStdIn.readString();
         TST codes = new TST();
+        int codesLen = (int)Math.pow(2, CODE_LENGTH);
         for (int i = 0; i < 256; i++) {
             codes.insert("" + (char)i, i);
         }
@@ -43,7 +44,7 @@ public class TextCompressor {
             int associatedCode = codes.lookup(prefix);
             BinaryStdOut.write(associatedCode, CODE_LENGTH);
             System.err.println("Writing: " + (associatedCode));
-            if (i + prefix.length() < text.length()) {
+            if (i + prefix.length() < text.length() && startCode < codesLen) {
                 char next = text.charAt(i + prefix.length());
                 codes.insert(prefix + next, startCode);
                 System.err.println("Adding Code: " + (prefix + next) + " Code: " + startCode);
@@ -57,6 +58,7 @@ public class TextCompressor {
 
     private static void expand() {
         String[] codes = new String[(int)Math.pow(2, CODE_LENGTH)];
+        int codesLen = (int)Math.pow(2, CODE_LENGTH);
         for (int i = 0; i <= 256; i++) {
             codes[i] = "" + (char)i;
             if (i == 256) {
@@ -64,7 +66,9 @@ public class TextCompressor {
             }
         }
         int maxCode = 257;
-        String val = codes[BinaryStdIn.readInt(12)];
+        int valCode = BinaryStdIn.readInt(12);
+        String val = codes[valCode];
+
         BinaryStdOut.write(val);
         int nextCode;
         while (!val.equals("")) {
@@ -72,9 +76,9 @@ public class TextCompressor {
             if (nextCode < maxCode) {
                 BinaryStdOut.write(codes[nextCode]);
             } else {
-                BinaryStdOut.write(val + codes[nextCode].charAt(0));
+                BinaryStdOut.write(val + val.charAt(0));
             }
-            if (maxCode < codes.length && nextCode != 256) {
+            if (maxCode < codes.length && nextCode != 256 && maxCode < codesLen) {
                 codes[maxCode++] = val + codes[nextCode].charAt(0);
             }
             val = codes[nextCode];

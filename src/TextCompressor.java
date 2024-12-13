@@ -39,7 +39,7 @@ public class TextCompressor {
             codes.insert("" + (char)i, i);
         }
         int startCode = 257;
-        String prefix;
+        String prefix = "";
         String longestPrefix;
         for (int i = 0; i < text.length(); i++) {
             prefix = "" + text.charAt(i);
@@ -50,32 +50,34 @@ public class TextCompressor {
             }
             BinaryStdOut.write(codes.lookup(prefix), CODE_LENGTH);
         }
+        BinaryStdOut.write(codes.lookup(prefix), CODE_LENGTH);
         BinaryStdOut.write(256, CODE_LENGTH);
         BinaryStdOut.close();
     }
 
     private static void expand() {
-        ArrayList<String> codes = new ArrayList<>();
-        for (int i = 0; i < 256; i++) {
-            codes.add("" + (char) i);
+        String[] codes = new String[(int)Math.pow(2, CODE_LENGTH)];
+        for (int i = 0; i <= 256; i++) {
+            codes[i] = "" + (char)i;
+            if (i == 256) {
+                codes[i] = "";
+            }
         }
-        String val = codes.get(BinaryStdIn.readInt(CODE_LENGTH));
+        int maxCode = 257;
+        String val = codes[BinaryStdIn.readInt(12)];
         BinaryStdOut.write(val);
         int nextCode;
-        while (!BinaryStdIn.isEmpty()) {
+        while (!val.equals("")) {
             nextCode = BinaryStdIn.readInt(CODE_LENGTH);
-            if (nextCode == 256){
-                break;
-            }
-            String nextVal;
-            if (nextCode < codes.size()) {
-                nextVal = codes.get(nextCode);
+            if (nextCode < maxCode) {
+                BinaryStdOut.write(codes[nextCode]);
             } else {
-                nextVal = val + val.charAt(0);
+                BinaryStdOut.write(val + codes[nextCode].charAt(0));
             }
-            codes.add(val + nextVal.charAt(0));
-            BinaryStdOut.write(nextVal);
-            val = nextVal;
+            if (maxCode < codes.length && nextCode != 256) {
+                codes[maxCode++] = val + codes[nextCode].charAt(0);
+            }
+            val = codes[nextCode];
         }
         BinaryStdOut.close();
     }

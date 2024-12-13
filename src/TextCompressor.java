@@ -30,18 +30,20 @@
 public class TextCompressor {
     // Length of codes for our compression and expansion, 12 as default
     final private static int CODE_LENGTH = 12;
+    final private static int EOF = 256;
+    final private static int FIRST_CODE = 257;
 
     // Compress algorithm reads in a string and compresses it using LZW compression
     private static void compress() {
-        // Reads in string and initialies TST used for storing all codes
+        // Reads in string and initializes TST used for storing all codes
         String text = BinaryStdIn.readString();
         TST codes = new TST();
-        int codesLen = (int)Math.pow(2, CODE_LENGTH);
+        int codesLen = 1 << CODE_LENGTH;
         // Assigns all initial values in the TST as well as our starting code
-        for (int i = 0; i < 256; i++) {
+        for (int i = 0; i < EOF; i++) {
             codes.insert("" + (char)i, i);
         }
-        int startCode = 257;
+        int startCode = FIRST_CODE;
         String prefix;
         // Loops through our text
         for (int i = 0; i < text.length();) {
@@ -64,24 +66,24 @@ public class TextCompressor {
             i += prefix.length();
         }
         // Writes EOF and closes file
-        BinaryStdOut.write(256, CODE_LENGTH);
+        BinaryStdOut.write(EOF, CODE_LENGTH);
         BinaryStdOut.close();
     }
 
     // Expands code via a compressed txt file
     private static void expand() {
         // Map used to access codes and their corresponding string values
-        String[] codes = new String[(int) Math.pow(2, CODE_LENGTH)];
-        int codesLen = (int) Math.pow(2, CODE_LENGTH);
+        int codesLen = 1 << CODE_LENGTH;
+        String[] codes = new String[codesLen];
         // Fills it with known values (ASCII)
-        for (int i = 0; i <= 256; i++) {
+        for (int i = 0; i <= EOF; i++) {
             codes[i] = "" + (char) i;
-            if (i == 256) {
+            if (i == EOF) {
                 codes[i] = "";
             }
         }
         // Reads in and initializes all necessary values to expand based off of current and future values
-        int maxCode = 257;
+        int maxCode = FIRST_CODE;
         int valCode = BinaryStdIn.readInt(CODE_LENGTH);
         String val = codes[valCode];
         BinaryStdOut.write(val);
@@ -90,7 +92,7 @@ public class TextCompressor {
         while (true) {
             // Checks next code to see if we will exit then
             nextCode = BinaryStdIn.readInt(CODE_LENGTH);
-            if (nextCode == 256) {
+            if (nextCode == EOF) {
                 break;
             }
             // Makes our entry string which represents what we will write out to our BinaryStdOut file

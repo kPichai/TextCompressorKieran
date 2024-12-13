@@ -21,8 +21,6 @@
  *  = 43.54% compression ratio!
  ******************************************************************************/
 
-import java.util.ArrayList;
-
 /**
  *  The {@code TextCompressor} class provides static methods for compressing
  *  and expanding natural language through textfile input.
@@ -35,22 +33,20 @@ public class TextCompressor {
     private static void compress() {
         String text = BinaryStdIn.readString();
         TST codes = new TST();
-        for (int i = 0; i < 255; i++) {
+        for (int i = 0; i < 256; i++) {
             codes.insert("" + (char)i, i);
         }
         int startCode = 257;
-        String prefix = "";
-        String longestPrefix;
+        String prefix;
         for (int i = 0; i < text.length(); i++) {
-            prefix = "" + text.charAt(i);
-            longestPrefix = codes.getLongestPrefix(text, i);
-            if (i + longestPrefix.length() < text.length()) {
-                codes.insert(prefix + text.charAt(i + longestPrefix.length()), startCode++);
-                i += longestPrefix.length();
+            prefix = codes.getLongestPrefix(text, i);
+            int associatedCode = codes.lookup(prefix);
+            BinaryStdOut.write(associatedCode, CODE_LENGTH);
+            if (i + prefix.length() < text.length()) {
+                char next = text.charAt(i + prefix.length());
+                codes.insert(prefix + next, startCode++);
             }
-            BinaryStdOut.write(codes.lookup(prefix), CODE_LENGTH);
         }
-        BinaryStdOut.write(codes.lookup(prefix), CODE_LENGTH);
         BinaryStdOut.write(256, CODE_LENGTH);
         BinaryStdOut.close();
     }

@@ -38,14 +38,18 @@ public class TextCompressor {
         }
         int startCode = 257;
         String prefix;
-        for (int i = 0; i < text.length(); i++) {
+        for (int i = 0; i < text.length();) {
             prefix = codes.getLongestPrefix(text, i);
             int associatedCode = codes.lookup(prefix);
             BinaryStdOut.write(associatedCode, CODE_LENGTH);
+            System.err.println("Writing: " + (associatedCode));
             if (i + prefix.length() < text.length()) {
                 char next = text.charAt(i + prefix.length());
-                codes.insert(prefix + next, startCode++);
+                codes.insert(prefix + next, startCode);
+                System.err.println("Adding Code: " + (prefix + next) + " Code: " + startCode);
+                startCode++;
             }
+            i += prefix.length();
         }
         BinaryStdOut.write(256, CODE_LENGTH);
         BinaryStdOut.close();
